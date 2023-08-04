@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package fixbug;
+
+//下面的选项，表示生成service服务类和rpc方法描述， 默认是不生成的
+option cc_generic_services = true;
+
+message ResultCode1{  //定义返回的错误码
+    int32 errcode = 1;
+    bytes errmsg = 2;
+}
+
+
+//常用的数据类型： 数据、列表、映射表
+
+//定义登录请求消息类型   name   pwd
+message GetFriendListRequest{
+    uint32 user_id = 1;
+
+}
+
+//定义登录响应消息类型
+message GetFriendListResponse{
+    repeated bytes friends = 1;
+    ResultCode1 result = 2;
+    bool success = 3;
+}
+
+
+
+//定义远程rpc服务
+service GetFriendListServiceRpc{
+    rpc GetFriendList(GetFriendListRequest) returns(GetFriendListResponse);
+}

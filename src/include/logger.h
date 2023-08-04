@@ -1,0 +1,52 @@
+#pragma once
+
+#include "lockqueue.h"
+#include <utility>
+
+enum LogLevel{
+    INFO = 1, //普通信息
+    ERROR  //错误信息
+};
+
+//Mprpc框架提供的日志系统
+class Logger
+{
+public:
+    //获取日志的单例
+    static Logger& GetInstance();
+    // //设置日志级别
+    // void SetLogLevel(LogLevel level);
+    //写日志
+    void Log(std::pair<LogLevel,std::string> msg);
+
+private:
+    // int m_loglevel; //记录日志级别
+    LockQueue<std::pair<LogLevel,std::string>> m_lckQue; //日志缓冲队列
+
+    Logger();
+    Logger(const Logger&) = delete;
+    Logger(Logger&& ) = delete;
+    Logger& operator=(const Logger&) = delete;
+};
+
+//定义宏  LOG_XXX("xxx %d %s", 20, "sdasd");
+#define LOG_INFO(logmsgformat, ...) \
+    do \
+    { \
+        Logger &logger = Logger::GetInstance(); \
+        char c[1024] = {0};           \
+        snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+        std::pair<LogLevel,std::string> pr = std::make_pair(INFO, std::string(c)); \
+        logger.Log(pr); \
+    } while (0);
+
+#define LOG_ERR(logmsgformat, ...) \
+do \
+{ \
+    Logger &logger = Logger::GetInstance(); \
+    char c[1024] = {0};           \
+    snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+    std::pair<LogLevel,std::string> pr = std::make_pair(ERROR, std::string(c)); \
+    logger.Log(pr); \
+} while (0);
+    

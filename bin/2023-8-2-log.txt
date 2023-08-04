@@ -1,0 +1,5 @@
+21-35-26 => [info]MprpcApplication init success
+21-35-26 => [error]eeeeeerrror1000000
+21-35-26 => [info]NotifyService UserService success
+21-35-26 => [error]eeeeeerrror9999999
+21-35-26 => [info]NotifyService GetFriendListService success
